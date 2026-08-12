@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ورود فروشنده | بازار گل</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+
+:root{
+    --forest:#0d241c;
+    --forest2:#16382b;
+    --emerald:#173d2b;
+    --emerald2:#24533d;
+    --gold:#c9a45c;
+    --goldLight:#e4ca8b;
+    --bg:#f5f7f5;
+    --white:#fff;
+    --text:#17221d;
+    --muted:#84908a;
+    --border:#e2e8e4;
+    --soft:#edf6f0;
+    --danger:#b33b3b;
+    --shadow:0 18px 50px rgba(13,36,28,.10);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    min-height:100vh;
+    font-family:"Vazirmatn",sans-serif;
+    background:
+        radial-gradient(circle at 85% 10%,rgba(36,83,61,.08),transparent 30%),
+        radial-gradient(circle at 10% 90%,rgba(201,164,92,.07),transparent 28%),
+        var(--bg);
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.login-wrapper{
+    width:100%;
+    max-width:430px;
+}
+
+.brand{
+    text-align:center;
+    margin-bottom:22px;
+}
+
+.brand-logo{
+    width:58px;
+    height:58px;
+    margin:auto;
+    border-radius:18px;
+    background:linear-gradient(135deg,var(--emerald2),var(--forest));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:22px;
+    box-shadow:0 12px 30px rgba(13,36,28,.20);
+}
+
+.brand h1{
+    margin-top:12px;
+    font-size:21px;
+    font-weight:900;
+    color:var(--forest);
+}
+
+.brand p{
+    margin-top:5px;
+    font-size:9px;
+    color:var(--muted);
+}
+
+.login-card{
+    background:rgba(255,255,255,.94);
+    border:1px solid rgba(226,232,228,.95);
+    border-radius:24px;
+    padding:25px;
+    box-shadow:var(--shadow);
+}
+
+.login-card h2{
+    font-size:16px;
+    font-weight:900;
+}
+
+.subtitle{
+    color:var(--muted);
+    font-size:8px;
+    line-height:1.9;
+    margin-top:6px;
+}
+
+.field{
+    margin-top:18px;
+}
+
+.field label{
+    display:block;
+    font-size:8px;
+    font-weight:700;
+    margin-bottom:7px;
+}
+
+.input-wrapper{
+    position:relative;
+}
+
+.input-wrapper i{
+    position:absolute;
+    right:13px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--emerald);
+    font-size:13px;
+}
+
+.input-wrapper input{
+    width:100%;
+    height:46px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    outline:none;
+    background:#fafcfb;
+    padding:0 40px 0 13px;
+    font-family:inherit;
+    font-size:10px;
+    color:var(--text);
+    direction:ltr;
+    text-align:left;
+    transition:.2s;
+}
+
+.input-wrapper input:focus{
+    border-color:var(--emerald2);
+    background:white;
+    box-shadow:0 0 0 4px rgba(36,83,61,.06);
+}
+
+.login-button{
+    width:100%;
+    height:46px;
+    margin-top:20px;
+    border-radius:12px;
+    background:linear-gradient(135deg,var(--emerald2),var(--forest));
+    color:white;
+    font-family:inherit;
+    font-size:10px;
+    font-weight:800;
+    box-shadow:0 10px 25px rgba(13,36,28,.18);
+    transition:.2s;
+}
+
+.login-button:hover{
+    transform:translateY(-2px);
+}
+
+.login-button:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.message{
+    display:none;
+    margin-top:13px;
+    padding:11px 12px;
+    border-radius:10px;
+    font-size:8px;
+    line-height:1.8;
+}
+
+.message.error{
+    display:block;
+    background:#fff1f1;
+    border:1px solid #f0cccc;
+    color:var(--danger);
+}
+
+.message.success{
+    display:block;
+    background:var(--soft);
+    border:1px solid #c9ded2;
+    color:var(--emerald);
+}
+
+.links{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:18px;
+}
+
+.links a{
+    text-decoration:none;
+    color:var(--emerald);
+    font-size:8px;
+    font-weight:700;
+}
+
+.links a:hover{
+    color:var(--gold);
+}
+
+.footer-note{
+    text-align:center;
+    margin-top:18px;
+    color:var(--muted);
+    font-size:7px;
+}
+
+@media(max-width:480px){
+    body{
+        padding:14px;
+    }
+
+    .login-card{
+        padding:20px;
+        border-radius:20px;
+    }
+
+    .brand h1{
+        font-size:19px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-wrapper">
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            <i class="fa-solid fa-store"></i>
+        </div>
+
+        <h1>بازار گل</h1>
+
+        <p>
+            ورود به پنل فروشنده
+        </p>
+
+    </div>
+
+
+    <section class="login-card">
+
+        <h2>
+            ورود فروشنده
+        </h2>
+
+        <p class="subtitle">
+            با ایمیل و رمز عبور وارد پنل مدیریت غرفه خود شوید.
+        </p>
+
+
+        <form id="loginForm">
+
+            <div class="field">
+
+                <label for="email">
+                    ایمیل
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                    <input
+                        id="email"
+                        type="email"
+                        placeholder="example@email.com"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="password">
+                    رمز عبور
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input
+                        id="password"
+                        type="password"
+                        placeholder="رمز عبور"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="loginButton"
+                class="login-button"
+                type="submit">
+
+                <i class="fa-solid fa-right-to-bracket"></i>
+
+                ورود به پنل فروشنده
+
+            </button>
+
+        </form>
+
+
+        <div
+            id="message"
+            class="message">
+        </div>
+
+
+        <div class="links">
+
+            <a href="seller-register.html">
+                ثبت‌نام فروشنده
+            </a>
+
+            <a href="customer-market.html">
+                بازگشت به بازار گل
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <div class="footer-note">
+        ورود امن فروشندگان بازار گل
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+"https://harfnbwcwrzflpxvgrsi.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_kSs0h4q8xBgLv3CroD0nxQ_Kls2ZeeR";
+
+const supabaseClient =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const loginForm =
+document.getElementById("loginForm");
+
+const emailInput =
+document.getElementById("email");
+
+const passwordInput =
+document.getElementById("password");
+
+const loginButton =
+document.getElementById("loginButton");
+
+const message =
+document.getElementById("message");
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+function showMessage(text,type){
+
+    message.textContent = text;
+
+    message.className =
+        "message " + type;
+
+}
+
+
+/* =========================================
+   CHECK EXISTING SESSION
+========================================= */
+
+async function checkSession(){
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient.auth.getSession();
+
+
+    if(error){
+
+        console.error(error);
+
+        return;
+    }
+
+
+    if(data.session){
+
+        location.href =
+            "sellerDashboard.html";
+
+    }
+
+}
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+loginForm.addEventListener(
+"submit",
+async function(event){
+
+    event.preventDefault();
+
+
+    const email =
+        emailInput.value.trim();
+
+    const password =
+        passwordInput.value;
+
+
+    if(!email || !password){
+
+        showMessage(
+            "ایمیل و رمز عبور را وارد کنید.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    loginButton.disabled = true;
+
+    loginButton.innerHTML =
+        '<i class="fa-solid fa-spinner fa-spin"></i> در حال ورود...';
+
+
+    showMessage(
+        "",
+        "success"
+    );
+
+    message.style.display =
+        "none";
+
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+        await supabaseClient.auth.signInWithPassword({
+
+            email:email,
+
+            password:password
+
+        });
+
+
+        if(error){
+
+            throw error;
+
+        }
+
+
+        if(!data.session){
+
+            throw new Error(
+                "نشست کاربر ایجاد نشد."
+            );
+
+        }
+
+
+        showMessage(
+            "ورود موفق بود. در حال انتقال به پنل فروشنده...",
+            "success"
+        );
+
+
+        setTimeout(()=>{
+
+            location.href =
+                "sellerDashboard.html";
+
+        },700);
+
+
+    }
+    catch(error){
+
+        console.error(error);
+
+
+        let text =
+            "ورود ناموفق بود.";
+
+
+        if(
+            error.message &&
+            error.message.includes(
+                "Invalid login credentials"
+            )
+        ){
+
+            text =
+                "ایمیل یا رمز عبور اشتباه است.";
+
+        }
+
+
+        showMessage(
+            text,
+            "error"
+        );
+
+
+        loginButton.disabled =
+            false;
+
+
+        loginButton.innerHTML =
+            '<i class="fa-solid fa-right-to-bracket"></i> ورود به پنل فروشنده';
+
+    }
+
+});
+
+
+/* =========================================
+   START
+========================================= */
+
+checkSession();
+
+</script>
+
+</body>
+</html>
