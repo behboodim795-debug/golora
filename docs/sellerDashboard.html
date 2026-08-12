@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>پنل فروشنده | بازار گل</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+
+:root{
+--forest:#0d241c;
+--forest2:#16382b;
+--emerald:#173d2b;
+--emerald2:#24533d;
+--gold:#c9a45c;
+--goldLight:#e4ca8b;
+--bg:#f5f7f5;
+--white:#fff;
+--text:#17221d;
+--muted:#84908a;
+--border:#e2e8e4;
+--soft:#edf6f0;
+--danger:#b33b3b;
+--shadow:0 12px 35px rgba(13,36,28,.08);
+}
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+font-family:"Vazirmatn",sans-serif;
+background:var(--bg);
+color:var(--text);
+min-height:100vh;
+}
+
+button{
+font-family:inherit;
+border:0;
+cursor:pointer;
+}
+
+.header{
+position:sticky;
+top:0;
+z-index:1000;
+background:rgba(255,255,255,.96);
+backdrop-filter:blur(18px);
+border-bottom:1px solid var(--border);
+}
+
+.header-inner{
+max-width:1200px;
+margin:auto;
+padding:15px 20px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:15px;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.brand-logo{
+width:42px;
+height:42px;
+border-radius:13px;
+background:linear-gradient(135deg,var(--emerald2),var(--forest));
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-size:17px;
+box-shadow:0 8px 20px rgba(13,36,28,.18);
+}
+
+.brand-text strong{
+display:block;
+font-size:15px;
+font-weight:900;
+color:var(--forest);
+}
+
+.brand-text span{
+display:block;
+font-size:8px;
+color:var(--muted);
+margin-top:3px;
+}
+
+.header-actions{
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.header-btn{
+height:38px;
+padding:0 13px;
+border-radius:11px;
+background:var(--soft);
+color:var(--emerald);
+font-size:9px;
+font-weight:700;
+}
+
+.header-btn.logout{
+background:#fff1f1;
+color:var(--danger);
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:25px 20px 110px;
+}
+
+.welcome{
+background:linear-gradient(135deg,var(--forest),var(--emerald2));
+border-radius:22px;
+padding:25px;
+color:white;
+box-shadow:0 18px 40px rgba(13,36,28,.16);
+position:relative;
+overflow:hidden;
+}
+
+.welcome:after{
+content:"";
+position:absolute;
+width:190px;
+height:190px;
+border-radius:50%;
+left:-70px;
+top:-90px;
+background:rgba(201,164,92,.1);
+}
+
+.welcome-content{
+position:relative;
+z-index:2;
+}
+
+.welcome small{
+font-size:9px;
+color:#cbd9d3;
+}
+
+.welcome h1{
+font-size:21px;
+margin-top:7px;
+font-weight:900;
+}
+
+.welcome p{
+font-size:9px;
+color:#c1d0ca;
+margin-top:7px;
+line-height:1.9;
+}
+
+.booth-info{
+display:flex;
+align-items:center;
+gap:8px;
+margin-top:15px;
+}
+
+.booth-badge{
+background:rgba(255,255,255,.1);
+border:1px solid rgba(255,255,255,.15);
+padding:7px 11px;
+border-radius:9px;
+font-size:8px;
+}
+
+.section-title{
+margin:30px 0 14px;
+}
+
+.section-title h2{
+font-size:16px;
+font-weight:900;
+}
+
+.section-title p{
+font-size:8px;
+color:var(--muted);
+margin-top:4px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:13px;
+}
+
+.stat-card{
+background:white;
+border:1px solid var(--border);
+border-radius:17px;
+padding:17px;
+box-shadow:var(--shadow);
+}
+
+.stat-icon{
+width:38px;
+height:38px;
+border-radius:11px;
+background:var(--soft);
+color:var(--emerald);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:15px;
+}
+
+.stat-card strong{
+display:block;
+font-size:18px;
+margin-top:12px;
+}
+
+.stat-card span{
+font-size:8px;
+color:var(--muted);
+}
+
+.actions{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:14px;
+}
+
+.action-card{
+background:white;
+border:1px solid var(--border);
+border-radius:18px;
+padding:20px;
+box-shadow:var(--shadow);
+text-align:right;
+transition:.22s;
+}
+
+.action-card:hover{
+transform:translateY(-3px);
+border-color:#bdd3c6;
+}
+
+.action-icon{
+width:45px;
+height:45px;
+border-radius:13px;
+background:var(--soft);
+color:var(--emerald);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:18px;
+margin-bottom:13px;
+}
+
+.action-card h3{
+font-size:11px;
+}
+
+.action-card p{
+font-size:8px;
+color:var(--muted);
+line-height:1.9;
+margin-top:5px;
+}
+
+.action-button{
+margin-top:14px;
+height:34px;
+padding:0 13px;
+border-radius:9px;
+background:var(--forest);
+color:white;
+font-size:8px;
+font-weight:700;
+}
+
+.profile-box{
+background:white;
+border:1px solid var(--border);
+border-radius:18px;
+box-shadow:var(--shadow);
+padding:20px;
+}
+
+.profile-row{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:11px 0;
+border-bottom:1px solid #edf0ee;
+}
+
+.profile-row:last-child{
+border-bottom:0;
+}
+
+.profile-row span{
+font-size:8px;
+color:var(--muted);
+}
+
+.profile-row strong{
+font-size:9px;
+}
+
+.loading{
+text-align:center;
+padding:40px;
+font-size:9px;
+color:var(--muted);
+}
+
+.error-box{
+display:none;
+background:#fff1f1;
+color:var(--danger);
+border:1px solid #f0caca;
+border-radius:14px;
+padding:14px;
+font-size:9px;
+margin-top:15px;
+}
+
+@media(max-width:800px){
+.stats{
+grid-template-columns:repeat(2,1fr);
+}
+
+.actions{
+grid-template-columns:1fr;
+}
+}
+
+@media(max-width:500px){
+.header-inner{
+padding:11px 14px;
+}
+
+.header-btn{
+font-size:8px;
+padding:0 9px;
+}
+
+.brand-text span{
+display:none;
+}
+
+.container{
+padding:18px 14px 100px;
+}
+
+.welcome{
+padding:20px;
+}
+
+.welcome h1{
+font-size:18px;
+}
+
+.stats{
+gap:9px;
+}
+
+.stat-card{
+padding:14px;
+}
+
+.stat-card strong{
+font-size:16px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+<div class="header-inner">
+
+<div class="brand">
+
+<div class="brand-logo">
+<i class="fa-solid fa-store"></i>
+</div>
+
+<div class="brand-text">
+<strong>بازار گل</strong>
+<span>پنل مدیریت فروشنده</span>
+</div>
+
+</div>
+
+<div class="header-actions">
+
+<button
+class="header-btn"
+onclick="location.href='customer-market.html'">
+<i class="fa-solid fa-arrow-right"></i>
+بازار
+</button>
+
+<button
+class="header-btn logout"
+id="logoutBtn">
+<i class="fa-solid fa-right-from-bracket"></i>
+خروج
+</button>
+
+</div>
+
+</div>
+
+</header>
+
+
+<main class="container">
+
+<div id="loading" class="loading">
+در حال دریافت اطلاعات فروشنده...
+</div>
+
+
+<div id="errorBox" class="error-box"></div>
+
+
+<section id="dashboard" style="display:none;">
+
+
+<section class="welcome">
+
+<div class="welcome-content">
+
+<small>خوش آمدید</small>
+
+<h1 id="sellerName">
+فروشنده
+</h1>
+
+<p>
+مدیریت غرفه، محصولات و سفارش‌های شما از این بخش انجام می‌شود.
+</p>
+
+<div class="booth-info">
+
+<div class="booth-badge">
+<i class="fa-solid fa-store"></i>
+<span id="boothName">در حال دریافت غرفه...</span>
+</div>
+
+<div class="booth-badge">
+<i class="fa-solid fa-location-dot"></i>
+<span id="boothCity">---</span>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<div class="section-title">
+
+<h2>نمای کلی غرفه</h2>
+
+<p>
+وضعیت فعلی کسب‌وکار شما
+</p>
+
+</div>
+
+
+<section class="stats">
+
+<div class="stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-box"></i>
+</div>
+
+<strong id="productCount">
+۰
+</strong>
+
+<span>
+محصولات
+</span>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-bag-shopping"></i>
+</div>
+
+<strong id="orderCount">
+۰
+</strong>
+
+<span>
+سفارش‌ها
+</span>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-boxes-stacked"></i>
+</div>
+
+<strong id="stockCount">
+۰
+</strong>
+
+<span>
+موجودی
+</span>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="stat-icon">
+<i class="fa-solid fa-star"></i>
+</div>
+
+<strong id="rating">
+-
+</strong>
+
+<span>
+امتیاز غرفه
+</span>
+
+</div>
+
+</section>
+
+
+<div class="section-title">
+
+<h2>
+مدیریت فروشگاه
+</h2>
+
+<p>
+دسترسی سریع به بخش‌های اصلی پنل
+</p>
+
+</div>
+
+
+<section class="actions">
+
+
+<article class="action-card">
+
+<div class="action-icon">
+<i class="fa-solid fa-box-open"></i>
+</div>
+
+<h3>
+مدیریت محصولات
+</h3>
+
+<p>
+افزودن، ویرایش، حذف و مدیریت موجودی محصولات غرفه.
+</p>
+
+<button
+class="action-button"
+onclick="location.href='sellerProduct.html'">
+
+مدیریت محصولات
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</button>
+
+</article>
+
+
+<article class="action-card">
+
+<div class="action-icon">
+<i class="fa-solid fa-receipt"></i>
+</div>
+
+<h3>
+مدیریت سفارش‌ها
+</h3>
+
+<p>
+مشاهده سفارش‌های مشتریان و تغییر وضعیت سفارش.
+</p>
+
+<button
+class="action-button"
+onclick="alert('بخش سفارش‌ها در مرحله بعد ساخته می‌شود.')">
+
+مشاهده سفارش‌ها
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</button>
+
+</article>
+
+
+<article class="action-card">
+
+<div class="action-icon">
+<i class="fa-solid fa-store"></i>
+</div>
+
+<h3>
+اطلاعات غرفه
+</h3>
+
+<p>
+مشاهده و مدیریت اطلاعات غرفه، شهر و مشخصات فروشنده.
+</p>
+
+<button
+class="action-button"
+onclick="alert('مدیریت اطلاعات غرفه در مرحله بعد ساخته می‌شود.')">
+
+اطلاعات غرفه
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</button>
+
+</article>
+
+
+</section>
+
+
+<div class="section-title">
+
+<h2>
+اطلاعات حساب
+</h2>
+
+<p>
+اطلاعات ثبت‌شده فروشنده
+</p>
+
+</div>
+
+
+<section class="profile-box">
+
+<div class="profile-row">
+
+<span>
+نام فروشنده
+</span>
+
+<strong id="profileName">
+-
+</strong>
+
+</div>
+
+
+<div class="profile-row">
+
+<span>
+شماره تلفن
+</span>
+
+<strong id="profilePhone">
+-
+</strong>
+
+</div>
+
+
+<div class="profile-row">
+
+<span>
+نام غرفه
+</span>
+
+<strong id="profileBooth">
+-
+</strong>
+
+</div>
+
+
+<div class="profile-row">
+
+<span>
+شهر
+</span>
+
+<strong id="profileCity">
+-
+</strong>
+
+</div>
+
+</section>
+
+
+</section>
+
+</main>
+
+
+<script>
+
+/* =========================================
+SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+"https://harfnbwcwrzflpxvgrsi.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_kSs0h4q8xBgLv3CroD0nxQ_Kls2ZeeR";
+
+const supabaseClient =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* =========================================
+ELEMENTS
+========================================= */
+
+const loading =
+document.getElementById("loading");
+
+const dashboard =
+document.getElementById("dashboard");
+
+const errorBox =
+document.getElementById("errorBox");
+
+
+/* =========================================
+HELPERS
+========================================= */
+
+function toPersianNumber(value){
+
+return String(value ?? 0)
+.replace(
+/\d/g,
+d=>"۰۱۲۳۴۵۶۷۸۹"[d]
+);
+
+}
+
+
+function showError(message){
+
+loading.style.display="none";
+
+errorBox.textContent=message;
+
+errorBox.style.display="block";
+
+}
+
+
+/* =========================================
+LOAD DASHBOARD
+========================================= */
+
+async function loadDashboard(){
+
+try{
+
+const {
+data:{
+user
+},
+error
+} =
+await supabaseClient.auth.getUser();
+
+
+if(error){
+throw error;
+}
+
+
+if(!user){
+
+location.href="seller-login.html";
+
+return;
+
+}
+
+
+/* =========================================
+SELLER PROFILE
+========================================= */
+
+let seller=null;
+
+const sellerResult =
+await supabaseClient
+.from("sellers")
+.select("*")
+.eq("id",user.id)
+.maybeSingle();
+
+
+if(sellerResult.error){
+throw sellerResult.error;
+}
+
+
+seller=sellerResult.data;
+
+
+/* =========================================
+BOOTH
+========================================= */
+
+const boothResult =
+await supabaseClient
+.from("seller_booths")
+.select("*")
+.eq("seller_id",user.id)
+.limit(1)
+.maybeSingle();
+
+
+if(boothResult.error){
+throw boothResult.error;
+}
+
+
+const booth=boothResult.data;
+
+
+if(!booth){
+
+showError(
+"برای این حساب هنوز غرفه‌ای ثبت نشده است."
+);
+
+return;
+
+}
+
+
+/* =========================================
+SELLER NAME
+========================================= */
+
+const sellerDisplayName =
+seller?.full_name ||
+seller?.name ||
+user.user_metadata?.full_name ||
+"فروشنده";
+
+
+document.getElementById(
+"sellerName"
+).textContent=
+sellerDisplayName;
+
+
+document.getElementById(
+"profileName"
+).textContent=
+sellerDisplayName;
+
+
+document.getElementById(
+"profilePhone"
+).textContent=
+seller?.phone ||
+user.phone ||
+"-";
+
+
+/* =========================================
+BOOTH INFO
+========================================= */
+
+document.getElementById(
+"boothName"
+).textContent=
+booth.shop_name ||
+"غرفه فروشنده";
+
+
+document.getElementById(
+"boothCity"
+).textContent=
+booth.city ||
+"-";
+
+
+document.getElementById(
+"profileBooth"
+).textContent=
+booth.shop_name ||
+"-";
+
+
+document.getElementById(
+"profileCity"
+).textContent=
+booth.city ||
+"-";
+
+
+/* =========================================
+PRODUCTS
+========================================= */
+
+const productsResult =
+await supabaseClient
+.from("booth_products")
+.select("id,stock,is_active")
+.eq("booth_id",booth.id);
+
+
+if(productsResult.error){
+throw productsResult.error;
+}
+
+
+const products =
+productsResult.data || [];
+
+
+const totalStock =
+products.reduce(
+(sum,item)=>
+sum+Number(item.stock||0),
+0
+);
+
+
+document.getElementById(
+"productCount"
+).textContent=
+toPersianNumber(products.length);
+
+
+document.getElementById(
+"stockCount"
+).textContent=
+toPersianNumber(totalStock);
+
+
+/* =========================================
+ORDERS
+========================================= */
+
+let orderCount=0;
+
+const ordersResult =
+await supabaseClient
+.from("orders")
+.select("id",{
+count:"exact",
+head:true
+})
+.eq("seller_id",user.id);
+
+
+if(!ordersResult.error){
+orderCount=ordersResult.count || 0;
+}
+
+
+document.getElementById(
+"orderCount"
+).textContent=
+toPersianNumber(orderCount);
+
+
+/* =========================================
+RATING
+========================================= */
+
+document.getElementById(
+"rating"
+).textContent=
+booth.rating
+?
+Number(booth.rating).toFixed(1)
+:
+"-";
+
+
+loading.style.display="none";
+
+dashboard.style.display="block";
+
+}
+
+catch(error){
+
+console.error(error);
+
+showError(
+"خطا در دریافت اطلاعات پنل فروشنده."
+);
+
+}
+
+}
+
+
+/* =========================================
+LOGOUT
+========================================= */
+
+document
+.getElementById("logoutBtn")
+.addEventListener(
+"click",
+async()=>{
+
+const confirmed =
+confirm(
+"آیا می‌خواهید از حساب فروشنده خارج شوید؟"
+);
+
+if(!confirmed){
+return;
+}
+
+
+const {
+error
+} =
+await supabaseClient.auth.signOut();
+
+
+if(error){
+
+alert(
+"خروج از حساب ناموفق بود."
+);
+
+return;
+
+}
+
+
+location.href=
+"seller-login.html";
+
+}
+);
+
+
+/* =========================================
+START
+========================================= */
+
+loadDashboard();
+
+</script>
+
+</body>
+</html>
